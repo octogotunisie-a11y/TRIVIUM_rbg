@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRIVIUM · Programme d'alignement stratégique</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+         :root {
+            --ink: #0E1117;
+            --deep: #141923;
+            --navy: #1A2640;
+            --gold: #B8975A;
+            --gold-l: #D4B07A;
+            --gold-d: #8A6E3A;
+            --cream: #F5F0E8;
+            --slate: #8A96A8;
+            --mist: #E8ECF2;
+            --white: #FFFFFF;
+        }
+        
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--ink);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        /* animations */
+        
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(32px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes lineGrow {
+            from {
+                transform: scaleX(0);
+            }
+            to {
+                transform: scaleX(1);
+            }
+        }
+        
+        @keyframes synapsePulse {
+            0%,
+            100% {
+                opacity: 0.3;
+                r: 3;
+            }
+            50% {
+                opacity: 0.8;
+                r: 6;
+            }
+        }
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.75s ease, transform 0.75s ease;
+        }
+        
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 48px;
+        }
+        /* topbar */
+        
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 200;
+            background: rgba(14, 17, 23, 0.96);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(184, 151, 90, 0.18);
+            height: 70px;
+            display: flex;
+            align-items: center;
+            padding: 0 48px;
+            justify-content: space-between;
+        }
+        
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .topbar-logo-octogo {
+            height: 38px;
+            width: auto;
+            display: block;
+        }
+        
+        .topbar-logo-rose {
+            height: 20px;
+            width: auto;
+            display: block;
+        }
+        
+        .topbar-sep {
+            width: 1px;
+            height: 32px;
+            background: rgba(184, 151, 90, 0.3);
+        }
+        
+        .topbar-logo-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: 6px;
+            color: var(--cream);
+        }
+        
+        .topbar-logo-text span {
+            color: var(--gold);
+        }
+        
+        .topbar-nav {
+            display: flex;
+            gap: 36px;
+        }
+        
+        .topbar-nav a {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(245, 240, 232, 0.45);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .topbar-nav a:hover {
+            color: var(--gold);
+        }
+        
+        .topbar-cta {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 12px 24px;
+            background: var(--gold);
+            color: var(--ink);
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .topbar-cta:hover {
+            background: var(--gold-l);
+        }
+        /* hero */
+        
+        .hero {
+            background: var(--deep);
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            padding-top: 70px;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: repeating-linear-gradient(-45deg, transparent, transparent 70px, rgba(184, 151, 90, 0.022) 70px, rgba(184, 151, 90, 0.022) 71px);
+            pointer-events: none;
+        }
+        
+        .hero-gold-bar {
+            height: 2px;
+            background: var(--gold);
+            transform-origin: left;
+            animation: lineGrow 2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+        }
+        /* synapse network */
+        
+        .synapse-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.09;
+            pointer-events: none;
+        }
+        
+        .hero-inner {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 70px 0 50px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.4s both;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        
+        .hero-label::before {
+            content: '';
+            width: 32px;
+            height: 1px;
+            background: var(--gold);
+        }
+        
+        .hero-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(52px, 7vw, 90px);
+            font-weight: 400;
+            line-height: 1.05;
+            color: var(--cream);
+            opacity: 0;
+            animation: fadeUp 0.9s ease 0.6s both;
+            max-width: 880px;
+        }
+        
+        .hero-title em {
+            font-style: italic;
+            background: linear-gradient(135deg, var(--gold-l) 0%, var(--gold) 50%, var(--gold-d) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-subtitle {
+            margin-top: 28px;
+            font-size: 19px;
+            color: rgba(245, 240, 232, 0.55);
+            max-width: 660px;
+            opacity: 0;
+            animation: fadeUp 0.9s ease 0.8s both;
+        }
+        
+        .neuro-pills {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 36px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 1.0s both;
+        }
+        
+        .neuro-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 18px;
+            border: 1px solid rgba(184, 151, 90, 0.25);
+            background: rgba(184, 151, 90, 0.07);
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(245, 240, 232, 0.6);
+        }
+        
+        .neuro-pill i {
+            color: var(--gold);
+            font-size: 13px;
+        }
+        
+        .hero-ctas {
+            margin-top: 44px;
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 1.2s both;
+        }
+        
+        .btn-gold {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            padding: 18px 36px;
+            background: var(--gold);
+            color: var(--ink);
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.2s, transform 0.15s;
+            font-weight: 500;
+        }
+        
+        .btn-gold:hover {
+            background: var(--gold-l);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            padding: 17px 36px;
+            background: transparent;
+            color: var(--cream);
+            border: 1px solid rgba(245, 240, 232, 0.22);
+            cursor: pointer;
+            transition: border-color 0.2s, color 0.2s;
+        }
+        
+        .btn-outline:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        /* hero diagramme trivium */
+        
+        .hero-diagram {
+            margin-top: 48px;
+            opacity: 0;
+            animation: fadeUp 0.9s ease 1.4s both;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .trivium-viz {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(184, 151, 90, 0.2);
+            padding: 28px 40px;
+            border-radius: 4px;
+        }
+        
+        .viz-item {
+            text-align: center;
+            padding: 16px 24px;
+            position: relative;
+        }
+        
+        .viz-item .num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 38px;
+            font-weight: 300;
+            color: var(--gold);
+            line-height: 1;
+        }
+        
+        .viz-item .label {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--cream);
+        }
+        
+        .viz-item .sub {
+            font-size: 9px;
+            color: rgba(245, 240, 232, 0.45);
+        }
+        
+        .viz-sep {
+            width: 1px;
+            height: 48px;
+            background: rgba(184, 151, 90, 0.3);
+        }
+        
+        .viz-center {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 13px;
+            font-style: italic;
+            color: var(--gold);
+            padding: 0 20px;
+            letter-spacing: 0.08em;
+        }
+        /* stats hero */
+        
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border-top: 1px solid rgba(184, 151, 90, 0.18);
+            margin-top: 64px;
+            opacity: 0;
+            animation: fadeUp 0.9s ease 1.6s both;
+        }
+        
+        .hero-stat {
+            padding: 32px 0 32px 40px;
+            border-right: 1px solid rgba(184, 151, 90, 0.1);
+        }
+        
+        .hero-stat:last-child {
+            border-right: none;
+        }
+        
+        .hero-stat-n {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(40px, 4.5vw, 58px);
+            font-weight: 300;
+            color: var(--cream);
+            line-height: 1;
+        }
+        
+        .hero-stat-n em {
+            color: var(--gold);
+            font-style: normal;
+        }
+        
+        .hero-stat-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--slate);
+            margin-top: 10px;
+        }
+        /* section base */
+        
+        section {
+            padding: 110px 0;
+        }
+        
+        .section-eyebrow {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+        
+        .section-eyebrow::before {
+            content: '';
+            width: 28px;
+            height: 1px;
+            background: var(--gold);
+        }
+        
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(38px, 4.5vw, 58px);
+            font-weight: 400;
+            line-height: 1.1;
+            color: var(--ink);
+            margin-bottom: 18px;
+        }
+        
+        .section-title em {
+            font-style: italic;
+            color: var(--gold-d);
+        }
+        
+        .section-lead {
+            font-size: 17px;
+            color: var(--slate);
+            line-height: 1.8;
+            max-width: 700px;
+        }
+        
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(184, 151, 90, 0.3), transparent);
+        }
+        /* problématique (fond sombre) */
+        
+        .prob-section {
+            background: var(--ink);
+        }
+        
+        .prob-section .section-title {
+            color: var(--cream);
+        }
+        
+        .prob-section .section-lead {
+            color: rgba(245, 240, 232, 0.5);
+        }
+        
+        .prob-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3px;
+            margin-top: 64px;
+        }
+        
+        .prob-card {
+            padding: 48px 44px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .prob-card-a {
+            background: rgba(184, 151, 90, 0.06);
+            border: 1px solid rgba(184, 151, 90, 0.18);
+        }
+        
+        .prob-card-b {
+            background: rgba(184, 151, 90, 0.03);
+            border: 1px solid rgba(184, 151, 90, 0.12);
+        }
+        
+        .prob-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gold);
+        }
+        
+        .prob-card-icon {
+            font-size: 32px;
+            margin-bottom: 24px;
+            color: var(--gold);
+        }
+        
+        .prob-card-title {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            color: var(--gold);
+        }
+        
+        .prob-card-text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: rgba(245, 240, 232, 0.65);
+        }
+        
+        .prob-metric {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        
+        .prob-metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-size: 14px;
+            color: rgba(245, 240, 232, 0.45);
+        }
+        
+        .prob-metric-val {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px;
+            font-weight: 300;
+            color: var(--cream);
+        }
+        
+        .prob-metric-val em {
+            font-style: normal;
+            color: var(--gold);
+        }
+        
+        .cost-bar {
+            margin-top: 64px;
+            padding: 44px;
+            background: rgba(184, 151, 90, 0.06);
+            border: 1px solid rgba(184, 151, 90, 0.2);
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        .cost-bar-item {
+            text-align: center;
+            padding: 20px;
+            border-right: 1px solid rgba(184, 151, 90, 0.1);
+        }
+        
+        .cost-bar-item:last-child {
+            border-right: none;
+        }
+        
+        .cost-bar-n {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 48px;
+            font-weight: 300;
+            color: var(--gold);
+            line-height: 1;
+        }
+        
+        .cost-bar-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(245, 240, 232, 0.4);
+            margin-top: 10px;
+        }
+        /* 4 prémisses */
+        
+        .premises-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3px;
+            margin-top: 68px;
+        }
+        
+        .premise {
+            background: var(--white);
+            padding: 48px 44px;
+            border: 1px solid rgba(184, 151, 90, 0.12);
+            position: relative;
+            overflow: hidden;
+            transition: box-shadow 0.3s;
+        }
+        
+        .premise:hover {
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.09);
+        }
+        
+        .premise-num {
+            position: absolute;
+            top: 24px;
+            right: 28px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 90px;
+            font-weight: 700;
+            color: var(--gold);
+            opacity: 0.06;
+            line-height: 1;
+            pointer-events: none;
+        }
+        
+        .premise-icon {
+            width: 52px;
+            height: 52px;
+            border: 1px solid rgba(184, 151, 90, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: var(--gold);
+            margin-bottom: 24px;
+        }
+        
+        .premise-tag {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 16px;
+        }
+        
+        .premise-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px;
+            font-weight: 500;
+            color: var(--ink);
+            line-height: 1.25;
+            margin-bottom: 18px;
+        }
+        
+        .premise-body {
+            font-size: 15px;
+            color: var(--slate);
+            line-height: 1.8;
+        }
+        
+        .premise-insight {
+            margin-top: 24px;
+            padding: 16px 20px;
+            background: rgba(184, 151, 90, 0.07);
+            border-left: 3px solid var(--gold);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+            font-style: italic;
+            color: var(--ink);
+            line-height: 1.65;
+        }
+        /* programme : timeline */
+        
+        .timeline-section {
+            background: var(--deep);
+        }
+        
+        .timeline-section .section-title {
+            color: var(--cream);
+        }
+        
+        .timeline-section .section-lead {
+            color: rgba(245, 240, 232, 0.45);
+        }
+        
+        .timeline {
+            position: relative;
+            padding-top: 48px;
+        }
+        
+        .timeline-spine {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, var(--gold), rgba(184, 151, 90, 0.1));
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 1fr 72px 1fr;
+            align-items: start;
+            margin-bottom: 48px;
+        }
+        
+        .timeline-card {
+            background: var(--white);
+            border: 1px solid rgba(184, 151, 90, 0.15);
+            padding: 32px;
+            transition: box-shadow 0.25s;
+        }
+        
+        .timeline-card:hover {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.07);
+        }
+        
+        .timeline-card-left {
+            margin-right: 12px;
+            border-right: 2px solid var(--gold);
+        }
+        
+        .timeline-card-right {
+            margin-left: 12px;
+            border-left: 2px solid var(--gold);
+        }
+        
+        .timeline-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 22px;
+        }
+        
+        .timeline-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--gold);
+            border: 3px solid var(--cream);
+            box-shadow: 0 0 0 2px var(--gold);
+        }
+        
+        .timeline-day {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--slate);
+            margin-top: 10px;
+        }
+        
+        .tl-eyebrow {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tl-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 21px;
+            font-weight: 500;
+            color: var(--ink);
+            margin-bottom: 12px;
+            line-height: 1.25;
+        }
+        
+        .tl-body {
+            font-size: 14px;
+            color: var(--slate);
+            line-height: 1.75;
+        }
+        
+        .tl-items {
+            margin-top: 14px;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .tl-items li {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            font-size: 13px;
+            color: var(--slate);
+            line-height: 1.55;
+        }
+        
+        .tl-items li::before {
+            content: '';
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--gold);
+            flex-shrink: 0;
+            margin-top: 7px;
+        }
+        
+        .tl-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 14px;
+            padding: 7px 14px;
+            background: rgba(184, 151, 90, 0.1);
+            border: 1px solid rgba(184, 151, 90, 0.25);
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--gold-d);
+        }
+        /* parcours (profils) */
+        
+        .profiles-section {
+            background: var(--deep);
+        }
+        
+        .profiles-section .section-title {
+            color: var(--cream);
+        }
+        
+        .profiles-section .section-lead {
+            color: rgba(245, 240, 232, 0.45);
+        }
+        
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3px;
+            margin-top: 60px;
+        }
+        
+        .profile-card {
+            padding: 36px 32px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.25s;
+        }
+        
+        .profile-card:hover {
+            border-color: rgba(184, 151, 90, 0.3);
+        }
+        
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gold);
+        }
+        
+        .profile-card-num {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 60px;
+            font-weight: 700;
+            opacity: 0.07;
+            line-height: 1;
+            pointer-events: none;
+        }
+        
+        .profile-card-icon {
+            width: 44px;
+            height: 44px;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-bottom: 18px;
+        }
+        
+        .profile-card-code {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            color: var(--gold);
+        }
+        
+        .profile-card-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--cream);
+            margin-bottom: 12px;
+        }
+        
+        .profile-card-pos {
+            font-size: 12px;
+            color: var(--slate);
+            font-style: italic;
+            margin-bottom: 12px;
+        }
+        
+        .profile-obs {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .profile-obs-item {
+            font-size: 12px;
+            color: rgba(245, 240, 232, 0.5);
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+            line-height: 1.5;
+        }
+        
+        .profile-obs-item::before {
+            content: '';
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: var(--gold);
+            flex-shrink: 0;
+            margin-top: 7px;
+        }
+        
+        .profile-card-script {
+            padding: 12px 14px;
+            border-left: 2px solid var(--gold);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 14px;
+            font-style: italic;
+            color: rgba(245, 240, 232, 0.8);
+            line-height: 1.6;
+            margin-top: 14px;
+        }
+        /* REC² (protocole) */
+        
+        .rec2-section {
+            background: var(--cream);
+        }
+        
+        .rec2-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3px;
+            margin-top: 60px;
+        }
+        
+        .rec2-card {
+            padding: 40px 32px;
+            border: 1px solid rgba(184, 151, 90, 0.15);
+            position: relative;
+            overflow: hidden;
+            background: var(--white);
+            transition: box-shadow 0.25s;
+        }
+        
+        .rec2-card:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        }
+        
+        .rec2-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gold);
+        }
+        
+        .rec2-letter-box {
+            width: 52px;
+            height: 52px;
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'DM Mono', monospace;
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 22px;
+        }
+        
+        .rec2-step-name {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            color: var(--gold);
+        }
+        
+        .rec2-goal {
+            font-size: 13px;
+            color: var(--slate);
+            font-style: italic;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+        
+        .rec2-script {
+            padding: 14px 16px;
+            border-left: 3px solid var(--gold);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+            font-style: italic;
+            color: var(--ink);
+            line-height: 1.65;
+            margin-bottom: 14px;
+        }
+        
+        .rec2-warn {
+            font-size: 12px;
+            color: var(--slate);
+            font-style: italic;
+            padding: 10px 12px;
+            background: rgba(184, 151, 90, 0.06);
+            border: 1px solid rgba(184, 151, 90, 0.15);
+            line-height: 1.6;
+        }
+        /* résultats stats */
+        
+        .stats-section {
+            background: var(--deep);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stats-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: repeating-linear-gradient(-45deg, transparent, transparent 80px, rgba(184, 151, 90, 0.015) 80px, rgba(184, 151, 90, 0.015) 81px);
+            pointer-events: none;
+        }
+        
+        .stats-section .section-title {
+            color: var(--cream);
+        }
+        
+        .stats-section .section-lead {
+            color: rgba(245, 240, 232, 0.45);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3px;
+            margin-top: 60px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(184, 151, 90, 0.12);
+            padding: 40px 36px;
+            transition: background 0.3s;
+        }
+        
+        .stat-card:hover {
+            background: rgba(184, 151, 90, 0.05);
+        }
+        
+        .stat-card-n {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 60px;
+            font-weight: 300;
+            color: var(--cream);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        
+        .stat-card-n em {
+            color: var(--gold);
+            font-style: normal;
+        }
+        
+        .stat-card-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--slate);
+            line-height: 1.6;
+        }
+        
+        .stat-card-body {
+            margin-top: 18px;
+            font-size: 14px;
+            color: rgba(245, 240, 232, 0.4);
+            line-height: 1.75;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 18px;
+        }
+        /* CTA final */
+        
+        .cta-section {
+            background: var(--deep);
+            padding: 110px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: repeating-linear-gradient(-45deg, transparent, transparent 60px, rgba(184, 151, 90, 0.018) 60px, rgba(184, 151, 90, 0.018) 61px);
+            pointer-events: none;
+        }
+        
+        .cta-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(38px, 5vw, 66px);
+            font-weight: 300;
+            color: var(--cream);
+            line-height: 1.1;
+            margin: 0 auto 28px;
+            max-width: 720px;
+        }
+        
+        .cta-title em {
+            font-style: italic;
+            background: linear-gradient(135deg, var(--gold-l), var(--gold), var(--gold-d));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .cta-sub {
+            font-size: 17px;
+            color: rgba(245, 240, 232, 0.45);
+            max-width: 540px;
+            margin: 0 auto 48px;
+            line-height: 1.8;
+        }
+        
+        .cta-contacts {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+            margin-top: 60px;
+            padding-top: 48px;
+            border-top: 1px solid rgba(184, 151, 90, 0.2);
+        }
+        
+        .cta-contact-role {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--slate);
+            margin-bottom: 8px;
+        }
+        
+        .cta-contact-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            color: var(--cream);
+        }
+        
+        .cta-contact-info {
+            font-size: 13px;
+            color: var(--gold);
+            margin-top: 4px;
+        }
+        /* footer */
+        
+        .footer {
+            background: var(--ink);
+            border-top: 1px solid rgba(184, 151, 90, 0.15);
+            padding: 32px 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .footer-logos {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .footer-logo-octogo {
+            height: 36px;
+            width: auto;
+            display: block;
+        }
+        
+        .footer-logo-rose {
+            height: 20px;
+            width: auto;
+            display: block;
+        }
+        
+        .footer-sep {
+            width: 1px;
+            height: 28px;
+            background: rgba(184, 151, 90, 0.25);
+        }
+        
+        .footer-logo-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            letter-spacing: 6px;
+            color: rgba(245, 240, 232, 0.3);
+        }
+        
+        .footer-logo-text span {
+            color: var(--gold);
+        }
+        
+        .footer-copy {
+            font-size: 12px;
+            color: rgba(138, 150, 168, 0.45);
+            font-style: italic;
+        }
+        
+        @media (max-width: 900px) {
+            .container {
+                padding: 0 24px;
+            }
+            .topbar-nav {
+                display: none;
+            }
+            .hero-stats,
+            .prob-grid,
+            .premises-grid,
+            .profiles-grid,
+            .rec2-grid,
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .timeline-item {
+                grid-template-columns: 1fr;
+            }
+            .timeline-spine,
+            .timeline-center {
+                display: none;
+            }
+            .timeline-card-left,
+            .timeline-card-right {
+                margin: 0 0 16px 0;
+                border-right: none;
+                border-left: 3px solid var(--gold);
+            }
+            .trivium-viz {
+                flex-direction: column;
+                padding: 28px 20px;
+            }
+            .viz-sep {
+                width: 48px;
+                height: 1px;
+            }
+            .topbar-left {
+                gap: 12px;
+            }
+            .footer-logos {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- TOPBAR AVEC LOGOS OCTOGO ET ROSE BLANCHE GROUP -->
+    <header class="topbar">
+        <div class="topbar-left">
+            <img class="topbar-logo-octogo" src="octogo.png" alt="OCTOGO">
+            <div class="topbar-sep"></div>
+            <img class="topbar-logo-rose" src="rbg.png" alt="Rose Blanche Group">
+            <div class="topbar-sep"></div>
+            <div class="topbar-logo-text">TRI<span>V</span>IUM</div>
+        </div>
+        <nav class="topbar-nav">
+            <a href="#concept">Concept</a>
+            <a href="#programme">Programme</a>
+            <a href="#parcours">Parcours</a>
+            <a href="#impact">Impact</a>
+            <a href="#contact">Contact</a>
+        </nav>
+        <button class="topbar-cta">Demander un contact</button>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-gold-bar"></div>
+        <svg class="synapse-svg" viewBox="0 0 1400 700" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="180" cy="140" r="7" fill="none" stroke="#B8975A" stroke-width="1.5"/>
+    <circle cx="420" cy="260" r="5" fill="none" stroke="#B8975A" stroke-width="1"/>
+    <circle cx="700" cy="100" r="9" fill="none" stroke="#B8975A" stroke-width="1.5"/>
+    <circle cx="980" cy="190" r="6" fill="none" stroke="#B8975A" stroke-width="1"/>
+    <circle cx="1200" cy="320" r="8" fill="none" stroke="#B8975A" stroke-width="1.5"/>
+    <circle cx="260" cy="430" r="5" fill="none" stroke="#B8975A" stroke-width="1"/>
+    <circle cx="560" cy="480" r="7" fill="none" stroke="#B8975A" stroke-width="1.5"/>
+    <circle cx="840" cy="530" r="5" fill="none" stroke="#B8975A" stroke-width="1"/>
+    <circle cx="1100" cy="500" r="7" fill="none" stroke="#B8975A" stroke-width="1.5"/>
+    <path d="M180,140 C280,170 340,230 420,260" fill="none" stroke="#B8975A" stroke-width=".7"/>
+    <path d="M420,260 C540,210 620,140 700,100" fill="none" stroke="#B8975A" stroke-width=".7"/>
+    <path d="M700,100 C820,130 900,165 980,190" fill="none" stroke="#B8975A" stroke-width=".7"/>
+    <path d="M980,190 C1060,230 1120,275 1200,320" fill="none" stroke="#B8975A" stroke-width=".7"/>
+    <circle cx="300" cy="205" r="2.5" fill="#B8975A"/>
+    <circle cx="560" cy="173" r="2" fill="#B8975A"/>
+    <circle cx="840" cy="145" r="2.5" fill="#B8975A"/>
+  </svg>
+
+        <div class="container hero-inner">
+            <div class="hero-label">Neurosciences appliquées · Organisation · Programme TRIVIUM</div>
+            <h1 class="hero-title">Alignement stratégique<br>des fonctions <em>marketing, commercial, back office</em></h1>
+            <p class="hero-subtitle">Quand trois chemins se rencontrent, ils créent une intelligence collective supérieure. TRIVIUM synchronise les perceptions, les discours et l'exécution.</p>
+
+            <div class="neuro-pills">
+                <span class="neuro-pill"><i class="fas fa-brain"></i> Cerveau prédictif</span>
+                <span class="neuro-pill"><i class="fas fa-network-wired"></i> Cognition collective</span>
+                <span class="neuro-pill"><i class="fas fa-eye"></i> Perception marché</span>
+                <span class="neuro-pill"><i class="fas fa-sync-alt"></i> Alignement</span>
+            </div>
+
+            <div class="hero-diagram">
+                <div class="trivium-viz">
+                    <div class="viz-item"><span class="num">01</span><span class="label">Marketing</span><span class="sub">Perception</span></div>
+                    <div class="viz-sep"></div>
+                    <div class="viz-item"><span class="num">02</span><span class="label">Commercial</span><span class="sub">Relation</span></div>
+                    <div class="viz-sep"></div>
+                    <div class="viz-item"><span class="num">03</span><span class="label">Back Office</span><span class="sub">Exécution</span></div>
+                    <div class="viz-sep"></div>
+                    <div class="viz-center">Intelligence stratégique</div>
+                </div>
+            </div>
+
+            <div class="hero-ctas">
+                <button class="btn-gold"><i class="fas fa-chevron-down"></i> Découvrir le programme</button>
+                <button class="btn-outline">Télécharger la synthèse</button>
+            </div>
+
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-n"><em>6</em></div>
+                    <div class="hero-stat-label">Journées de formation</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-n"><em>3</em></div>
+                    <div class="hero-stat-label">Sessions progressives</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-n"><em>3</em></div>
+                    <div class="hero-stat-label">Parcours spécialisés</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-n"><em>>100</em></div>
+                    <div class="hero-stat-label">Indicateurs opérationnels</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROBLÉMATIQUE (double coût) -->
+    <section class="prob-section" id="problematique">
+        <div class="container">
+            <div class="section-eyebrow reveal">Le double coût du silo</div>
+            <h2 class="section-title reveal">Quand les fonctions <em>évoluent en parallèle</em></h2>
+            <p class="section-lead reveal">Marketing, commercial et back office poursuivent des objectifs légitimes mais selon des logiques indépendantes — générant friction, incohérence et perte d'efficacité mesurable.</p>
+
+            <div class="prob-grid reveal">
+                <div class="prob-card prob-card-a">
+                    <div class="prob-card-icon"><i class="fas fa-bullhorn"></i></div>
+                    <div class="prob-card-title">Coût marketing & image</div>
+                    <div class="prob-card-text">Les messages construits en amont ne sont pas toujours relayés fidèlement par les équipes terrain. La perception du marché devient floue, la marque perd en crédibilité.</div>
+                    <div class="prob-metric">
+                        <div class="prob-metric-row"><span>Incohérence perçue par les clients</span>
+                            <div class="prob-metric-val"><em>63%</em></div>
+                        </div>
+                        <div class="prob-metric-row"><span>Impact sur la mémorisation de la promesse</span>
+                            <div class="prob-metric-val">−<em>41%</em></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="prob-card prob-card-b">
+                    <div class="prob-card-icon"><i class="fas fa-handshake"></i></div>
+                    <div class="prob-card-title">Coût commercial & relation</div>
+                    <div class="prob-card-text">Les équipes commerciales gèrent des objections qui naissent moins d'un défaut d'argumentaire que d'un défaut d'alignement avec les promesses marketing et les capacités réelles de l'opérationnel.</div>
+                    <div class="prob-metric">
+                        <div class="prob-metric-row"><span>Tensions liées à des engagements non tenus</span>
+                            <div class="prob-metric-val"><em>52%</em></div>
+                        </div>
+                        <div class="prob-metric-row"><span>Perte d'efficacité commerciale</span>
+                            <div class="prob-metric-val">−<em>28%</em></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cost-bar reveal">
+                <div class="cost-bar-item">
+                    <div class="cost-bar-n">37%</div>
+                    <div class="cost-bar-label">Des projets échouent par manque d'alignement interservices</div>
+                </div>
+                <div class="cost-bar-item">
+                    <div class="cost-bar-n">2,3x</div>
+                    <div class="cost-bar-label">Plus de temps de résolution quand une friction implique 3 services</div>
+                </div>
+                <div class="cost-bar-item">
+                    <div class="cost-bar-n">−22 pts</div>
+                    <div class="cost-bar-label">De NPS lorsque la promesse n'est pas soutenue opérationnellement</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4 PRÉMICES (fondamentaux TRIVIUM) -->
+    <section id="concept">
+        <div class="container">
+            <div class="section-eyebrow reveal">Fondements scientifiques</div>
+            <h2 class="section-title reveal">TRIVIUM repose sur <em>quatre prémisses</em> validées</h2>
+            <p class="section-lead reveal">Ces prémisses ne sont pas des métaphores. Ce sont des mécanismes organisationnels et cognitifs documentés, qui expliquent pourquoi l'alignement est un levier de performance sous-exploité.</p>
+
+            <div class="premises-grid">
+                <div class="premise reveal">
+                    <div class="premise-num">01</div>
+                    <div class="premise-icon"><i class="fas fa-draw-polygon"></i></div>
+                    <div class="premise-tag">Prémice 01 — Trois chemins</div>
+                    <div class="premise-title">Un carrefour est plus efficace que trois routes parallèles</div>
+                    <div class="premise-body">Aucune des trois fonctions prise isolément ne peut produire une expérience client cohérente. Leur convergence est un multiplicateur de performance.</div>
+                    <div class="premise-insight">"La qualité perçue par le client est la somme des alignements entre ce qui est promis, dit et livré."</div>
+                </div>
+                <div class="premise reveal">
+                    <div class="premise-num">02</div>
+                    <div class="premise-icon"><i class="fas fa-brain"></i></div>
+                    <div class="premise-tag">Prémice 02 — Perception prédictive</div>
+                    <div class="premise-title">Le marché juge par confrontation au modèle prédictif</div>
+                    <div class="premise-body">Tout client compare en continu ce qu'il perçoit à ce qu'il avait prédit. L'écart entre promesse marketing et réalité opérationnelle génère une tension cognitive qui détériore la relation.</div>
+                    <div class="premise-insight">"La cohérence réduit l'énergie libre du client."</div>
+                </div>
+                <div class="premise reveal">
+                    <div class="premise-num">03</div>
+                    <div class="premise-icon"><i class="fas fa-heartbeat"></i></div>
+                    <div class="premise-tag">Prémice 03 — Clarté intérieure</div>
+                    <div class="premise-title">La clarté externe naît de la clarté interne</div>
+                    <div class="premise-body">Une organisation alignée produit des signaux cohérents. Les tensions interservices génèrent un bruit interne que le client perçoit sans l'identifier — sous forme d'inconfort ou de méfiance.</div>
+                    <div class="premise-insight">"L'alignement interne est la première condition de la crédibilité externe."</div>
+                </div>
+                <div class="premise reveal">
+                    <div class="premise-num">04</div>
+                    <div class="premise-icon"><i class="fas fa-dna"></i></div>
+                    <div class="premise-tag">Prémice 04 — Transformation systémique</div>
+                    <div class="premise-title">Les changements durables sont systémiques, pas individuels</div>
+                    <div class="premise-body">Former chaque service séparément ne produit pas d'alignement. TRIVIUM agit sur les interfaces, les représentations croisées et les routines collectives.</div>
+                    <div class="premise-insight">"Ce sont les liens entre les fonctions qu'il faut transformer, pas chaque fonction isolément."</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROGRAMME : TIMELINE 3 SESSIONS -->
+    <section class="timeline-section" id="programme">
+        <div class="container">
+            <div class="section-eyebrow reveal">Architecture du programme</div>
+            <h2 class="section-title reveal">Trois sessions,<br><em>une progression intégrée</em></h2>
+            <p class="section-lead reveal">Six journées réparties en trois temps : socle commun, parcours spécialisés, activation stratégique collective.</p>
+
+            <div class="timeline reveal">
+                <div class="timeline-spine"></div>
+
+                <div class="timeline-item">
+                    <div class="timeline-card timeline-card-left">
+                        <div class="tl-eyebrow"><i class="fas fa-layer-group"></i> Session 1 · Jours 1–2</div>
+                        <div class="tl-title">ÉVEIL — Fondations communes</div>
+                        <ul class="tl-items">
+                            <li>Cerveau prédictif, attention, perception, prise de décision</li>
+                            <li>Mécanismes de la coopération interservices</li>
+                            <li>Langage commun pour les trois populations</li>
+                        </ul>
+                        <div class="tl-badge">Tous les participants</div>
+                    </div>
+                    <div class="timeline-center">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-day">J1–2</div>
+                    </div>
+                    <div></div>
+                </div>
+
+                <div class="timeline-item">
+                    <div></div>
+                    <div class="timeline-center">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-day">J3–4</div>
+                    </div>
+                    <div class="timeline-card timeline-card-right">
+                        <div class="tl-eyebrow"><i class="fas fa-code-branch"></i> Session 2 · Jours 3–4</div>
+                        <div class="tl-title">TROIS PARCOURS SPÉCIALISÉS</div>
+                        <ul class="tl-items">
+                            <li><strong>CAPTER</strong> — Équipes commerciales : structuration neurocognitive de la relation</li>
+                            <li><strong>LABELCEPTION</strong> — Marketing : construction des représentations mentales</li>
+                            <li><strong>NEURO SYNC</strong> — Back office : synchronisation des interfaces</li>
+                        </ul>
+                        <div class="tl-badge">En parallèle, par fonction</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-card timeline-card-left">
+                        <div class="tl-eyebrow"><i class="fas fa-project-diagram"></i> Session 3 · Jours 5–6</div>
+                        <div class="tl-title">ACTIVATION STRATÉGIQUE</div>
+                        <ul class="tl-items">
+                            <li>Cartographie des points de friction organisationnels</li>
+                            <li>Ateliers de co-construction marketing/commercial/back office</li>
+                            <li>Définition d'engagements collectifs et d'indicateurs partagés</li>
+                        </ul>
+                        <div class="tl-badge">Tous ensemble — intelligence collective</div>
+                    </div>
+                    <div class="timeline-center">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-day">J5–6</div>
+                    </div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3 PARCOURS (profils détaillés) -->
+    <section class="profiles-section" id="parcours">
+        <div class="container">
+            <div class="section-eyebrow reveal">Session 2 — Parcours</div>
+            <h2 class="section-title reveal">Un parcours <em>sur mesure</em> pour chaque fonction</h2>
+            <p class="section-lead reveal">Chaque équipe suit un chemin ancré dans sa réalité métier, tout en conservant le socle cognitif commun.</p>
+
+            <div class="profiles-grid">
+                <div class="profile-card reveal">
+                    <div class="profile-card::before" style="background:var(--gold);"></div>
+                    <div class="profile-card-num">01</div>
+                    <div class="profile-card-icon"><i class="fas fa-bullseye"></i></div>
+                    <div class="profile-card-code">CAPTER</div>
+                    <div class="profile-card-name">Équipes commerciales</div>
+                    <div class="profile-card-pos">Relation client & négociation</div>
+                    <div class="profile-obs">
+                        <div class="profile-obs-item">Confiance — Établir la crédibilité relationnelle</div>
+                        <div class="profile-obs-item">Attention — Capter et orienter l'intérêt</div>
+                        <div class="profile-obs-item">Personnalisation — Adapter au contexte client</div>
+                    </div>
+                    <div class="profile-card-script">"Structurer les interactions en tenant compte des mécanismes cognitifs d'achat."</div>
+                </div>
+                <div class="profile-card reveal">
+                    <div class="profile-card::before" style="background:var(--gold);"></div>
+                    <div class="profile-card-num">02</div>
+                    <div class="profile-card-icon"><i class="fas fa-tag"></i></div>
+                    <div class="profile-card-code">LABELCEPTION</div>
+                    <div class="profile-card-name">Marketing & communication</div>
+                    <div class="profile-card-pos">Perception & représentation</div>
+                    <div class="profile-obs">
+                        <div class="profile-obs-item">Labels mentaux et catégories cognitives</div>
+                        <div class="profile-obs-item">Construction des représentations de marque</div>
+                        <div class="profile-obs-item">Cohérence cognitive des signaux émis</div>
+                    </div>
+                    <div class="profile-card-script">"Ancrer la marque dans les bons schémas mentaux du marché."</div>
+                </div>
+                <div class="profile-card reveal">
+                    <div class="profile-card::before" style="background:var(--gold);"></div>
+                    <div class="profile-card-num">03</div>
+                    <div class="profile-card-icon"><i class="fas fa-cogs"></i></div>
+                    <div class="profile-card-code">NEURO SYNC</div>
+                    <div class="profile-card-name">Back office & support</div>
+                    <div class="profile-card-pos">Processus & interfaces</div>
+                    <div class="profile-obs">
+                        <div class="profile-obs-item">Comprendre les tensions interservices</div>
+                        <div class="profile-obs-item">Mécanismes de régulation interne</div>
+                        <div class="profile-obs-item">Protocole RELA² — 4 étapes</div>
+                    </div>
+                    <div class="profile-card-script">"Fluidifier la coopération entre fonctions."</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- REC² Protocole -->
+    <section class="rec2-section" id="protocole">
+        <div class="container">
+            <div class="section-eyebrow reveal">Protocole commun REC²</div>
+            <h2 class="section-title reveal">Un langage opérationnel <em>pour désamorcer les frictions</em></h2>
+            <p class="section-lead reveal">Quelle que soit la fonction, le même séquençage pour traiter une tension à l'interface.</p>
+
+            <div class="rec2-grid">
+                <div class="rec2-card reveal">
+                    <div class="rec2-letter-box">R</div>
+                    <div class="rec2-step-name">RECONNAÎTRE</div>
+                    <div class="rec2-goal">Nommer la réalité de l'autre sans la juger</div>
+                    <div class="rec2-script">"Je comprends que cette situation soit frustrante."</div>
+                    <div class="rec2-warn">Ne jamais sauter cette étape.</div>
+                </div>
+                <div class="rec2-card reveal">
+                    <div class="rec2-letter-box">E</div>
+                    <div class="rec2-step-name">EXPLIQUER</div>
+                    <div class="rec2-goal">Donner du sens à la règle ou au processus</div>
+                    <div class="rec2-script">"La règle existe parce que… pour vous cela signifie…"</div>
+                    <div class="rec2-warn">Relier au cadre, pas au pouvoir.</div>
+                </div>
+                <div class="rec2-card reveal">
+                    <div class="rec2-letter-box">C</div>
+                    <div class="rec2-step-name">CHOISIR</div>
+                    <div class="rec2-goal">Offrir des options réelles dans le cadre</div>
+                    <div class="rec2-script">"Nous avons deux possibilités : X ou Y. Quelle est votre préférence ?"</div>
+                    <div class="rec2-warn">Deux options viables.</div>
+                </div>
+                <div class="rec2-card reveal">
+                    <div class="rec2-letter-box">C²</div>
+                    <div class="rec2-step-name">CO-CONSTRUIRE</div>
+                    <div class="rec2-goal">Valider ensemble la sortie</div>
+                    <div class="rec2-script">"Voyons ensemble comment mettre cela en œuvre."</div>
+                    <div class="rec2-warn">Engagement mutuel.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IMPACT : STATS -->
+    <section class="stats-section" id="impact">
+        <div class="container">
+            <div class="section-eyebrow reveal">Résultats mesurés</div>
+            <h2 class="section-title reveal">Impact stratégique <em>chiffré</em></h2>
+            <p class="section-lead reveal">Données issues des premières cohortes TRIVIUM en environnement complexe.</p>
+
+            <div class="stats-grid">
+                <div class="stat-card reveal">
+                    <div class="stat-card-n">−<em>58%</em></div>
+                    <div class="stat-card-label">Frictions interservices</div>
+                    <div class="stat-card-body">Réduction des tensions signalées entre marketing, commercial et back office.</div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-card-n">+<em>44%</em></div>
+                    <div class="stat-card-label">Cohérence du discours perçue</div>
+                    <div class="stat-card-body">Amélioration de la perception de la marque par les clients internes et externes.</div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-card-n">−<em>32%</em></div>
+                    <div class="stat-card-label">Temps de résolution</div>
+                    <div class="stat-card-body">Des problèmes nécessitant l'intervention de plusieurs services.</div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-card-n"><em>91%</em></div>
+                    <div class="stat-card-label">Participants</div>
+                    <div class="stat-card-body">Déclarent utiliser les outils TRIVIUM dans leurs interactions quotidiennes.</div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-card-n">+<em>27 pts</em></div>
+                    <div class="stat-card-label">Clarté de la proposition de valeur</div>
+                    <div class="stat-card-body">Mesurée auprès des équipes commerciales après le programme.</div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-card-n">×<em>2,1</em></div>
+                    <div class="stat-card-label">Efficacité des réunions</div>
+                    <div class="stat-card-body">Interservices selon les participants.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <section class="cta-section" id="contact">
+        <div class="container">
+            <h2 class="cta-title reveal">Prêt à aligner <br><em>votre organisation ?</em></h2>
+            <p class="cta-sub reveal">Une session de présentation sans engagement pour explorer comment TRIVIUM peut s'adapter à votre contexte.</p>
+            <div class="reveal" style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;">
+                <button class="btn-gold"><i class="fas fa-calendar-check"></i> Planifier un échange</button>
+                <button class="btn-outline" style="color:var(--cream);"><i class="fas fa-file-pdf"></i> Télécharger la brochure</button>
+            </div>
+            <div class="cta-contacts reveal">
+                <div>
+                    <div class="cta-contact-role">Direction</div>
+                    <div class="cta-contact-name">OCTOGO</div>
+                    <div class="cta-contact-info">contact@trivium-programme.com</div>
+                </div>
+                <div style="width:1px;background:rgba(184,151,90,0.2);"></div>
+                <div>
+                    <div class="cta-contact-role">Disponibilité</div>
+                    <div class="cta-contact-name">10h – 17h</div>
+                    <div class="cta-contact-info">+216 28 26 28 29</div>
+                </div>
+                <div style="width:1px;background:rgba(184,151,90,0.2);"></div>
+                <div>
+                    <div class="cta-contact-role">Modalités</div>
+                    <div class="cta-contact-name">Présentiel / hybride</div>
+                    <div class="cta-contact-info">6 jours · 3 sessions</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER AVEC LOGOS OCTOGO ET ROSE BLANCHE GROUP -->
+    <footer class="footer">
+        <div class="footer-logos">
+            <img class="footer-logo-octogo" src="octogo.png" alt="OCTOGO">
+            <div class="footer-sep"></div>
+            <img class="footer-logo-rose" src="rbg.png" alt="Rose Blanche Group">
+            <div class="footer-sep"></div>
+            <div class="footer-logo-text">TRI<span>V</span>IUM</div>
+        </div>
+        <div class="footer-copy">Programme d'alignement stratégique — Octogo & Rose Blanche Group 2025 · Document confidentiel</div>
+    </footer>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) e.target.classList.add('visible');
+            });
+        }, {
+            threshold: 0.1
+        });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const t = document.querySelector(a.getAttribute('href'));
+                if (t) t.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
